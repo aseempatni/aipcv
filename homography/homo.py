@@ -16,7 +16,7 @@ else:
     final_width=im_src.shape[1]
     final_height=im_src.shape[0]
 
-
+# I'm too lazy to convert right click to left click
 #the [x, y] for each right-click event will be stored here
 right_clicks = list()
 
@@ -61,5 +61,5 @@ if __name__ == '__main__' :
 
     # Display image
     cv2.imshow("Warped Source Image", im_out)
-    cv2.imwrite('Out.jpg',im_out)
+    cv2.imwrite(sys.argv[1]+'_rectilinear.jpg',im_out)
     cv2.waitKey(0)

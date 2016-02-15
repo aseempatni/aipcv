@@ -1,59 +1,40 @@
-import numpy as np
 import cv2
-from matplotlib import pyplot as plt
+import numpy as np
+import sys
+import matplotlib.pyplot as plt
+from utils import * 
 
-MIN_MATCH_COUNT = 10
+if __name__ == '__main__':
+	img_blur = cv2.imread(sys.argv[1])
+	img_blur = cv2.resize(img_blur, (0,0), fx=0.25, fy=0.25)
+	
+	img1 = cv2.imread(sys.argv[2])
+	img1 = cv2.resize(img1, (0,0), fx=0.25, fy=0.25)
+	
+	img2 = cv2.imread(sys.argv[3])
+	img2 = cv2.resize(img2, (0,0), fx=0.25, fy=0.25)
+		
+	M1 = getHomography(img_blur,img1)
+	M2 = getHomography(img_blur,img2)
 
-img1 = cv2.imread('Ajanta_blurred.jpg',0)          # queryImage
-img2 = cv2.imread('Ajanta_2.jpg',0) # trainImage
+	img1_tr = cv2.warpPerspective(img1, M1, (img_blur.shape[1],img_blur.shape[0]))
+	img2_tr = cv2.warpPerspective(img2, M2, (img_blur.shape[1],img_blur.shape[0]))
 
-# Initiate SIFT detector
-# sift = cv2.SIFT()
-sift = cv2.xfeatures2d.SIFT_create()
+	img2gray = cv2.cvtColor(img1_tr,cv2.COLOR_BGR2GRAY)
+	ret, mask1_inv = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY_INV)
 
-# find the keypoints and descriptors with SIFT
-kp1, des1 = sift.detectAndCompute(img1,None)
-kp2, des2 = sift.detectAndCompute(img2,None)
+	img2gray = cv2.cvtColor(img2_tr,cv2.COLOR_BGR2GRAY)
+	ret, mask2_inv = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY_INV)
 
-# BFMatcher with default params
-bf = cv2.BFMatcher()
-matches = bf.knnMatch(des1,des2, k=2)
+	dst = cv2.bitwise_and(img_blur,img_blur, mask = mask1_inv)
+	dst = cv2.add(dst, img1_tr)
 
-# Apply ratio test
-good = []
-for m,n in matches:
-    if m.distance < 0.75*n.distance:
-        good.append([m])
+	dst = cv2.bitwise_and(dst,dst, mask = mask2_inv)
+	dst = cv2.add(dst, img2_tr)
 
-img3=img1
-# cv2.drawMatchesKnn expects list of lists as matches.
-img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,good,img3,flags=2)
-
-plt.imshow(img3,),plt.show()
-
-if len(good)>MIN_MATCH_COUNT:
-    src_pts = np.float32([ kp1[m[0].queryIdx].pt for m in good ]).reshape(-1,1,2)
-    dst_pts = np.float32([ kp2[m[0].trainIdx].pt for m in good ]).reshape(-1,1,2)
-
-    M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
-    matchesMask = mask.ravel().tolist()
-
-    h,w = img1.shape
-    pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
-    dst = cv2.perspectiveTransform(pts,M)
-
-    img2 = cv2.polylines(img2,[np.int32(dst)],True,255,3, cv2.LINE_AA)
-
-else:
-    print "Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
-    matchesMask = None
-
-draw_params = dict(matchColor = (0,255,0), # draw matches in green color
-                   singlePointColor = None,
-                   matchesMask = matchesMask, # draw only inliers
-                   flags = 2)
-
-# TODO: lower code is buggy
-#img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,img3,**draw_params)
-
-#plt.imshow(img3, 'gray'),plt.show()
+	cv2.imshow("Ajanta 1 image", img1)
+	cv2.imshow("Ajanta 2 image", img2)
+	cv2.imshow("Ajanta Blurred image", img_blur)
+	cv2.imshow("Final Image", dst)
+	cv2.imwrite(sys.argv[1]+"_restored.jpg",dst)
+	cv2.waitKey(0)
