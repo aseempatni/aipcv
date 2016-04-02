@@ -162,13 +162,18 @@ with open("range.txt",'r') as range_data:
     for line in range_data:
         wl_ranges.append( line.strip().split(' '))
 
-# Read the parameters from the CLI
+# Read the image
+img = cv2.imread("image2.jpg")
+
+# Read the wavelength parameters from the CLI
 if len(sys.argv) >2:
     wl_min = int(sys.argv[1])
     wl_max = int(sys.argv[2])
-
-# Read the image
-img = cv2.imread("image2.jpg")
+    img1 =  filter_wavelength(img.copy(),wl_min, wl_max)
+    plt.subplot(121),plt.imshow(bgr_to_rgb(img))
+    plt.subplot(122),plt.imshow(bgr_to_rgb(img1))
+    plt.show()
+    exit()
 
 #------------------------------------------#
 # Filtering
