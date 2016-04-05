@@ -32,6 +32,8 @@ def RGB_to_XYZ(R,G,B):
     return X,Y,Z
 
 def XYZ_to_xy(X,Y,Z):
+    if X+Y+Z==0:
+        return 0,0
     return X/(X+Y+Z), Y/(X+Y+Z)
 
 def RGB_to_xy(R,G,B):
