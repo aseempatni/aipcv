@@ -2,6 +2,8 @@ import cv2
 import csv
 import math
 from color import *
+from matplotlib import pyplot as plt
+import pprint as pp
 
 # Get the white point
 white_point_x, white_point_y = RGB_to_xy(255,255,255)
@@ -72,10 +74,10 @@ def parse_chromaticity_chart(filename):
 
         for row in lines:
             #print ', '.join(row)
-            x,y = RGB_to_xy(row[1], row[2], row[3])
+            x,y = XYZ_to_xy(float(row[1]), float(row[2]), float(row[3]))
             angle = get_angle(x,y)
             wavelength_angle[int(row[0])] = angle
-            # print row[0], angle
+            # print row, angle, x, y
     return wavelength_angle
 
 # FIlter the image for a wavelength range
@@ -88,7 +90,7 @@ def filter_wavelength(img,wl_min, wl_max):
     # Filter the pixels falling in the angle range
     for i in range(img.shape[0]):    # for every pixel:
         for j in range(img.shape[1]):
-            if not filter_pixel(img[i,j],angle_min, angle_max):
+            if filter_pixel(img[i,j],angle_min, angle_max):
                 img[i,j] = [0,0,0]
 
     return img
@@ -99,3 +101,11 @@ def filter_wavelength(img,wl_min, wl_max):
 
 # Parse chromaticity chart
 wavelength_angle = parse_chromaticity_chart("ciexyz31_1.csv")
+
+if __name__ == "__main__":
+    myDictionary = wavelength_angle
+    plt.plot(myDictionary.keys(), myDictionary.values(), 'b--')
+    plt.xlabel('Wavelength')
+    plt.ylabel('Angle')
+    plt.title('Wavelength Angle in Chromaticity Chart')
+    plt.show()
