@@ -16,14 +16,6 @@ def gaussian_mean_curvature(Z):
     H = -H/(2*(Zx**2 + Zy**2 + 1)**(1.5))
     return K,H
 
-# Input image
-img = cv2.imread(image_name,0)
-
-# Show image
-# cv2.imshow("image",img)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-
 # Get principal curvatures from gaussian and mean curvatures
 def principal_curvature(H,K):
     k1 = np.zeros(img.shape)
@@ -51,6 +43,38 @@ def principal_curvature(H,K):
 
     return k1,k2
 
+# Get the surface type at a point from the h and k values.
+def surface_type_from_kh(k,h):
+    if k<0:
+        if h<0:
+            return "peak"
+        if h==0:
+            return "none"
+        if h>0:
+            return "pit"
+    if k==0:
+        if h<0:
+            return "ridge"
+        if h==0:
+            return "flat"
+        if h>0:
+            return "valley"
+    if k>0:
+        if h<0:
+            return "suddle ridge"
+        if h==0:
+            return "minimal surface"
+        if h>0:
+            return "saddle valley"
+
+
+# Input image
+img = cv2.imread(image_name,0)
+
+# Show image
+# cv2.imshow("image",img)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
 
 # Compute gaussian and mean curvatures from depth image
 K,H = gaussian_mean_curvature(img)
@@ -62,4 +86,5 @@ k1,k2 = principal_curvature(H,K)
 print k1
 print k2
 
-# TODO: Characterise local topology at a point based on signs of curvature
+# Characterise local topology at a point based on signs of curvature
+
