@@ -16,8 +16,9 @@ K,H = gaussian_mean_curvature(img)
 # Compute principal curvatures from gaussian and mean curvatures
 k1,k2 = principal_curvature(H,K)
 
-#K = normalize_matrix(K)
-#display(K)
+K = normalize_matrix(K)
+display(K,"Gaussian Curvature")
+display(H,"Mean Curvature")
 
 #-------------------------------#
 # Characterise local topology
@@ -26,15 +27,32 @@ k1,k2 = principal_curvature(H,K)
 # Characterise local topology at a point based on signs of curvature
 
 # (a) Based on Principal Curvature
+# surface contains labels as 1,2,3...
 surface_from_principal = surface_type_from_principal(img,k1,k2)
-display(surface_from_principal)
 
 # (b) Based on gaussian and mean curvature
-surface_from_hk = surface_type_from_kh(img,H,K)
-display(surface_from_hk)
+# surface contains labels as 1,2,3...
+surface_from_hk = surface_type_from_hk(img,H,K)
 
-
-# Perform region growing of homogeneous labels
+#-------------------------------#
+# Regoin Growing
+#-------------------------------#
 
 # Regoin grouping is done using BFS, and the result is same as the image obtained in surface type from curvatures.
 
+# Using only case a
+
+# surface image is scaled visualisation for surface, with segments being marked.
+surface_image_from_principal = scale_surface_to_image(surface_from_principal)
+display(surface_image_from_principal,"Surface Labels/segments using only Principal Curvature")
+
+# Using only case b
+
+# surface image is scaled visualisation for surface, with segments being marked.
+surface_image_from_hk = scale_surface_to_image(surface_from_hk)
+display(surface_image_from_hk,"Surface labels/segments using only Gaussian and Mean Curvatures")
+
+# Using both case a and b
+
+surface_image_from_hk_principal = scale_hk_principal_surface_to_image(surface_from_hk, surface_from_principal)
+display(surface_image_from_hk_principal,"Surface labels/segments using all the curvatures.")

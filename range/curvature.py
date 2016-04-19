@@ -2,9 +2,6 @@ import cv2
 
 import math
 import numpy as np
-import sys
-
-image_name = sys.argv[1]
 
 # Get gaussian and mean curvatures from range image
 def gaussian_mean_curvature(Z):
@@ -28,96 +25,84 @@ def principal_curvature(H,K):
             k2[i,j] = h - math.sqrt(max(0,h*h - k))
     return k1,k2
 
-# Get the surface type at a point from the h and k values.
-def surface_type_from_kh(img,H,K):
-    surface = np.zeros((img.shape[0], img.shape[1],3))
-    for i in range(len(surface)):
-        for j in range(len(surface[0])):
-            h = H[i,j]
-            k = K[i,j]
-            if k<0:
-                if h<0:
-                    surface[i,j] = (255,0,0)
-                if h==0:
-                    surface[i,j] = (0,255,0)
-                if h>0:
-                    surface[i,j] = (0,0,255)
-            if k==0:
-                if h<0:
-                    surface[i,j] = (255,255,0)
-                if h==0:
-                    surface[i,j] = (255,0,255)
-                if h>0:
-                    surface[i,j] = (0,255,255)
-            if k>0:
-                if h<0:
-                    surface[i,j] = (50,255,255)
-                if h==0:
-                    surface[i,j] = (50,255,255)
-                if h>0:
-                    surface[i,j] = (50,255,255)
-    return surface
-
-# # Get the surface type at a point from the h and k values.
-# def surface_type_from_kh(img,H,K):
-#     surface = np.zeros((img.shape[0], img.shape[1]))
-#     for i in range(len(surface)):
-#         for j in range(len(surface[0])):
-#             h = H[i,j]
-#             k = K[i,j]
-#             if k<0:
-#                 if h<0:
-#                     surface[i,j] = 0
-#                 if h==0:
-#                     surface[i,j] = 40
-#                 if h>0:
-#                     surface[i,j] = 80
-#             if k==0:
-#                 if h<0:
-#                     surface[i,j] = 120
-#                 if h==0:
-#                     surface[i,j] = 160
-#                 if h>0:
-#                     surface[i,j] = 200
-#             if k>0:
-#                 if h<0:
-#                     surface[i,j] = 220
-#                 if h==0:
-#                     surface[i,j] = 240
-#                 if h>0:
-#                     surface[i,j] = 255
-#     return surface
-
 # Get the surface type at a point from the k1 and k2 values.
 def surface_type_from_principal(img,H,K):
-    surface = np.zeros((img.shape[0], img.shape[1],3))
+    surface = np.zeros((img.shape[0], img.shape[1]))
     for i in range(len(surface)):
         for j in range(len(surface[0])):
             h = H[i,j]
             k = K[i,j]
             if k<0:
                 if h<0:
-                    surface[i,j] = (255,0,0)
+                    surface[i,j] = 1
                 if h==0:
-                    surface[i,j] = (0,255,0)
+                    surface[i,j] = 2
                 if h>0:
-                    surface[i,j] = (0,0,255)
+                    surface[i,j] = 3
             if k==0:
                 if h<0:
-                    surface[i,j] = (255,255,0)
+                    surface[i,j] = 2
                 if h==0:
-                    surface[i,j] = (255,0,255)
+                    surface[i,j] = 5
                 if h>0:
-                    surface[i,j] = (0,255,255)
+                    surface[i,j] = 6
             if k>0:
                 if h<0:
-                    surface[i,j] = (50,255,255)
+                    surface[i,j] = 3
                 if h==0:
-                    surface[i,j] = (50,255,255)
+                    surface[i,j] = 6
                 if h>0:
-                    surface[i,j] = (50,255,255)
+                    surface[i,j] = 4
     return surface
 
+# Get the surface type at a point from the h and k values.
+def surface_type_from_hk(img,H,K):
+    surface = np.zeros((img.shape[0], img.shape[1]))
+    for i in range(len(surface)):
+        for j in range(len(surface[0])):
+            h = H[i,j]
+            k = K[i,j]
+            if k<0:
+                if h<0:
+                    surface[i,j] = 1
+                if h==0:
+                    surface[i,j] = 2
+                if h>0:
+                    surface[i,j] = 3
+            if k==0:
+                if h<0:
+                    surface[i,j] = 4
+                if h==0:
+                    surface[i,j] = 5
+                if h>0:
+                    surface[i,j] = 6
+            if k>0:
+                if h<0:
+                    surface[i,j] = 7
+                if h==0:
+                    surface[i,j] = 8
+                if h>0:
+                    surface[i,j] = 9
+    return surface
+
+# scale surface labels, which can then be displayed as an image
+def scale_surface_to_image(surface):
+    surface = surface * 25
+    return surface.astype(np.uint8)
+
+# Get an image using surface labels from both gaussian, mean and principal curvatures.
+def scale_hk_principal_surface_to_image(hk,principal):
+    img = np.zeros((hk.shape[0], hk.shape[1],3))
+    hk = hk * 25
+    principal = principal * 25
+    for i in range(hk.shape[0]):
+        for j in range(hk.shape[1]):
+            # img[i,j,1] = hk[i,j]
+            # img[i,j,2] = principal[i,j]
+            img[i,j] = [0,hk[i,j],principal[i,j]]
+    return img.astype(np.uint8)
+
+# Normalize a matrix, which can then be displayed as an image
 def normalize_matrix(m):
     min = m[0,0]
     max = m[0,0]
@@ -131,12 +116,12 @@ def normalize_matrix(m):
         for j in range(len(m[0])):
             m[i,j]-=min
             m[i,j]*=255/(max-min)
-    return m
+    return m.astype(np.uint8)
 
-
-def display(img):
+# Utility function to display an image
+def display(img,image_name = "image"):
     # Show image
-    cv2.imshow("image",img)
+    cv2.imshow(image_name,img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
