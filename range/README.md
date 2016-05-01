@@ -13,7 +13,9 @@ Regoin growing clubs the pixels having the same label. This is done using BFS. T
 
 ## Quality of segmentationet 
 
-Observations:
+### Observations:
+
+By comparing with the corresponding RGB images, we observe that:
 
 * We found that (a) and (b) both gave a similar performance, with principal curvature performing slightly better.
 * Also, the combination of a and b i.e. (a,b) is found to give better segmentation than using just the gaussian, mean or principal curvatures alone.
@@ -21,6 +23,6 @@ Observations:
 * The segments are not that clearly visible in the output, and most of them are of really small size.
 * The reason for that could be poor recording of the range data.
 
-Result:
+### Result:
 
 (a) = (b) < (a,b)

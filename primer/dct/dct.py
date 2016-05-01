@@ -105,7 +105,7 @@ def dct_transform():
 	after_inverse_dct = inv_dct(block_dct_transformed_image)
 	print after_inverse_dct
 	cv2.imwrite("After inverse transform.png",after_inverse_dct)
-	cv2.imshow('image',after_inverse_dct)
+	cv2.imshow('After inverse transform',after_inverse_dct)
 	cv2.waitKey(0)
 
 if __name__ == "__main__":
