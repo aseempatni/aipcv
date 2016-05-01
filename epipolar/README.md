@@ -1,4 +1,4 @@
-To run the code,
+## Instructions to use
 
 `python fundamental.py <img1> <img2> <mode>`
 

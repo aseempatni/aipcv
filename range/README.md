@@ -1,4 +1,4 @@
-## Instructions to run
+## Instructions to use
 
 ### Compute curvatures
 
@@ -11,7 +11,7 @@ For example,
 
 Regoin growing clubs the pixels having the same label. This is done using BFS. The resultant image shows the different regions with different intencities.
 
-## Quality of segmentationet 
+## Quality of segmentation
 
 ### Observations:
 

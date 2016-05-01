@@ -1,3 +1,5 @@
+## Instructions to Use
+
 Initial parts are trivial
 
 ### Salt and pepper noise
@@ -9,6 +11,8 @@ Initial parts are trivial
 `python sobel.py ../lego.tif`
 
 `python sobel.py ../lego.tif library`
+
+Manual implementation output stored in `gradient.eps`
 
 ### DCT
 

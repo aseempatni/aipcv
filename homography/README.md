@@ -41,10 +41,10 @@ Output stored in `Ajanta_blurred_restored.jpg`
 
 ### Upscaling
 
-`python mosaic.py <image-1> <image-2>`
+`python upscale.py <image-1> <image-2>`
 
 For example:
-`python mosaic.py Ajanta_1.jpg Ajanta_2.jpg`
+`python upscale.py Ajanta_1.jpg Ajanta_2.jpg`
 
 Output stored in `Ajanta_1_mosaic.jpg`
 

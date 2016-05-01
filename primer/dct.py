@@ -3,9 +3,9 @@ import math
 # simple function for coefficents in discrete cosine transform
 def C_uv(uv):
     if(uv == 0):
-	return 1 / math.sqrt(2.0)
+		return 1 / math.sqrt(2.0)
     else:
-   	return 1.0
+   		return 1.0
 
 # returns the 2d frequency domain of a square block of pixel values
 def DCT(block):

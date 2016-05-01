@@ -46,6 +46,7 @@ def sobel():
 	# Original Image
 	# cv2.imshow('image',lego)
 	# cv2.waitKey(0)
+	
 	# X gradient image
 	A = [[-1,0,1],[-2,0,2],[-1,0,1]]
 	gradx = convolve(A,lego)
