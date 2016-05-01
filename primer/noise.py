@@ -7,13 +7,13 @@ import math
 
 # Load image 1
 cap = cv2.imread('cap.bmp',0)
-# cv2.imshow('image',cap)
-# cv2.waitKey(0)
 
 # Load image 2
 lego = cv2.imread('lego.tif')
 
+# Convert the image to greyscale
 graylego = cv2.cvtColor(lego,cv2.COLOR_BGR2GRAY)
+
 '''
 cv2.imshow('image',img)
 cv2.waitKey(0)
@@ -33,23 +33,23 @@ cv2.waitKey(0)
 '''
 
 def sp_noise(image,prob):
-
-# Add salt and pepper noise to image
-# prob: Probability of the noise
-
-	prob = prob/2
-	output = np.zeros(image.shape,np.uint8)
-	thres = 1 - prob
-	for i in range(image.shape[0]):
-	    for j in range(image.shape[1]):
-	        rdn = random.random()
-	        if rdn < prob:
-	            output[i][j] = 0
-	        elif rdn > thres:
-	            output[i][j] = 255
-	        else:
-	            output[i][j] = image[i][j]
-	return output
+    '''
+    Add salt and pepper noise to image
+    prob: Probability of the noise
+    '''
+    prob = prob/2
+    output = np.zeros(image.shape,np.uint8)
+    thres = 1 - prob
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            rdn = random.random()
+            if rdn < prob:
+                output[i][j] = 0
+            elif rdn > thres:
+                output[i][j] = 255
+            else:
+                output[i][j] = image[i][j]
+    return output
 
 
 def median_filter(image,type,window_width,window_height):

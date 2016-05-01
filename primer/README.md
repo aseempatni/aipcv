@@ -2,7 +2,7 @@ Initial parts are trivial
 
 ### Salt and pepper noise
 
-`python sol.py`
+`python noise.py`
 
 ### Sobel
 
