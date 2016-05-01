@@ -73,5 +73,5 @@ if __name__ == '__main__':
 	cv2.imshow("Projected Image", img2_proj)
 	cv2.imshow("interpolated Image", img1_interpolate)
 	cv2.imshow("interpolated Image Modified", img_out)
-	cv2.imwrite(sys.argv[1] + "_upscaled.jpg",img_out)
+	cv2.imwrite(sys.argv[1].split('.')[0] + "_upscaled.jpg",img_out)
 	cv2.waitKey(0)

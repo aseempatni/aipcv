@@ -36,5 +36,5 @@ if __name__ == '__main__':
 	cv2.imshow("Ajanta 2 image", img2)
 	cv2.imshow("Ajanta Blurred image", img_blur)
 	cv2.imshow("Final Image", dst)
-	cv2.imwrite(sys.argv[1]+"_restored.jpg",dst)
+	cv2.imwrite(sys.argv[1].split('.')[0]+"_restored.jpg",dst)
 	cv2.waitKey(0)

@@ -31,5 +31,5 @@ if __name__ == '__main__':
 	cv2.imshow("Image 1", img1)
 	cv2.imshow("Image 2", img2)
 	cv2.imshow("Output Image", img2_out)
-	cv2.imwrite(sys.argv[1]+"_mosaic.jpg", img2_out)
+	cv2.imwrite(sys.argv[1].split('.')[0]+"_mosaic.jpg", img2_out)
 	cv2.waitKey(0)
